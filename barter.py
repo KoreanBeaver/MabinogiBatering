@@ -96,7 +96,7 @@ class CraftingChecklistApp:
         tree.set(row_id, column="Check", value=check_symbol)
 
         # 하위 항목 체크 상태 동기화
-        for ingredient_idx in range(len(self.items[page_number][idx]["ingredients"])):
+        for ingredient_idx in range(len(self.items[page_number][idx]["ingredients"])): 
             sub_row_id = f"{idx}_sub_{ingredient_idx}"
             self.items[page_number][idx]["ingredient_checks"][ingredient_idx] = new_status
             tree.set(sub_row_id, column="Check", value=check_symbol)
@@ -143,7 +143,10 @@ class CraftingChecklistApp:
         if page_number == 1:
             return [
                 {"item": "Fine Sand", "number": 25, "ingredients": [["Braid", 50], ["Stamina 500 Potion", 75]], "checked": False, "ingredient_checks": [False, False]},
-                {"item": "Prison Ghost Wings", "number": 15, "ingredients": [["Cotton Cushion", 20], ["Finest Silk", 10]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Prison Ghost Wings", "number": 15, "ingredients": [["Cotton Cushion Stuffing", 20], ["Finest Silk", 10]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Oasis Painting", "number": 10, "ingredients": [["Finest Leather Strap", 10], ["Tough Thread", 30]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Cactus Flower", "number": 8, "ingredients": [["Spirit Liqueur", 8], ["Silver Plate", 16], ["Fine Fabric", 32]], "checked": False, "ingredient_checks": [False, False, False]},
+                {"item": "Giant Canine Fossil", "number": 3, "ingredients": [["Pet Playset", 3], ["Hay Bale", 9], ["Enchanted Firewood", 15]], "checked": False, "ingredient_checks": [False, False, False]}
             ]
         elif page_number == 2:
             return [
@@ -178,6 +181,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = CraftingChecklistApp(root)
     root.mainloop()
+
 
 
 
