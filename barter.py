@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import json
 import os
+import webbrowser
 
 
 class CraftingChecklistApp:
@@ -30,39 +31,40 @@ class CraftingChecklistApp:
             self.items[page_number] = self.create_checklist_data(page_number)
 
         # Treeview 생성
-        tree = ttk.Treeview(frame, columns=("Item", "Number", "Ingredients", "Check"), show="headings", height=15)
+        tree = ttk.Treeview(frame, columns=("Item", "Number", "Ingredient", "Quantity", "Check"), show="headings", height=15)
         tree.pack(fill="both", expand=True)
         tree.heading("Item", text="Item")
         tree.heading("Number", text="Number")
-        tree.heading("Ingredients", text="Ingredients")
+        tree.heading("Ingredient", text="Ingredient")
+        tree.heading("Quantity", text="Quantity")
         tree.heading("Check", text="Check")
         tree.column("Item", anchor="center", width=120)
         tree.column("Number", anchor="center", width=80)
-        tree.column("Ingredients", anchor="center", width=200)
+        tree.column("Ingredient", anchor="center", width=150)
+        tree.column("Quantity", anchor="center", width=80)
         tree.column("Check", anchor="center", width=60)
 
         # Treeview 스타일 태그
-        tree.tag_configure("main_item", font=("Arial", 12, "bold"))  # 상위 항목 폰트 스타일
-        tree.tag_configure("sub_item", font=("Arial", 10))          # 하위 항목 폰트 스타일
+        tree.tag_configure("main_item", font=("Arial", 12, "bold"))
+        tree.tag_configure("sub_item", font=("Arial", 10))
 
         # 데이터 삽입
         for idx, item in enumerate(self.items[page_number]):
             check_symbol = "✔" if item["checked"] else "✘"
             main_row_id = tree.insert(
                 "", "end", iid=f"{idx}_main",
-                values=(item["item"], item["number"], "Click to see", check_symbol),
-                tags=("main_item",)  # 상위 항목 태그 적용
+                values=(item["item"], item["number"], "Click to see", "", check_symbol),
+                tags=("main_item",)
             )
 
             # 하위 행 추가 (재료 세부 사항)
-            ingredients = item["ingredients"].split(", ")  # 쉼표로 나눔
-            for ingredient_idx, ingredient in enumerate(ingredients):
-                ingredient_checked = item.get("ingredient_checks", [False] * len(ingredients))[ingredient_idx]
+            for ingredient_idx, (ingredient, quantity) in enumerate(item["ingredients"]):
+                ingredient_checked = item["ingredient_checks"][ingredient_idx]
                 ingredient_symbol = "✔" if ingredient_checked else "✘"
                 tree.insert(
                     main_row_id, "end", iid=f"{idx}_sub_{ingredient_idx}",
-                    values=("", "", ingredient, ingredient_symbol),
-                    tags=("sub_item",)  # 하위 항목 태그 적용
+                    values=("", "", ingredient, quantity, ingredient_symbol),
+                    tags=("sub_item",)
                 )
 
         tree.bind("<Button-1>", lambda event, tree=tree, page_number=page_number: self.on_click(event, tree, page_number))
@@ -73,14 +75,15 @@ class CraftingChecklistApp:
         column = tree.identify_column(event.x)
         row_id = tree.identify_row(event.y)
 
-        if region == "cell" and column == "#4":  # Check 열 클릭
+        if region == "cell" and column == "#5":  # Check 열 클릭
             if "_main" in row_id:  # 상위 항목 클릭
                 self.toggle_check(tree, row_id, page_number)
             elif "_sub_" in row_id:  # 하위 항목 클릭
                 self.toggle_sub_check(tree, row_id, page_number)
 
-        elif region == "cell" and column == "#3" and "_main" in row_id:  # Ingredients 열 클릭
-            self.toggle_expand(tree, row_id)
+        elif region == "cell" and column == "#3":  # Ingredient 열 클릭
+            if "_sub_" in row_id:
+                self.open_link(tree, row_id, page_number)
 
     def toggle_check(self, tree, row_id, page_number):
         idx = int(row_id.split("_")[0])
@@ -93,8 +96,7 @@ class CraftingChecklistApp:
         tree.set(row_id, column="Check", value=check_symbol)
 
         # 하위 항목 체크 상태 동기화
-        ingredients = self.items[page_number][idx]["ingredients"].split(", ")
-        for ingredient_idx in range(len(ingredients)):
+        for ingredient_idx in range(len(self.items[page_number][idx]["ingredients"])):
             sub_row_id = f"{idx}_sub_{ingredient_idx}"
             self.items[page_number][idx]["ingredient_checks"][ingredient_idx] = new_status
             tree.set(sub_row_id, column="Check", value=check_symbol)
@@ -119,18 +121,17 @@ class CraftingChecklistApp:
 
         self.save_data()
 
-    def toggle_expand(self, tree, row_id):
-        # 하위 행 토글
-        if tree.item(row_id, "open"):
-            tree.item(row_id, open=False)
-        else:
-            tree.item(row_id, open=True)
+    def open_link(self, tree, row_id, page_number):
+        main_idx, sub_idx = map(int, row_id.split("_")[0::2])
+        ingredient_name = self.items[page_number][main_idx]["ingredients"][sub_idx][0]
+        url = f"https://wiki.mabinogiworld.com/view/{ingredient_name.replace(' ', '_')}"
+        webbrowser.open(url)
 
     def reset_all(self):
         for page_number, tree in self.trees.items():
             for idx in self.items[page_number]:
                 idx["checked"] = False
-                idx["ingredient_checks"] = [False] * len(idx["ingredients"].split(", "))
+                idx["ingredient_checks"] = [False] * len(idx["ingredients"])
             for row_id in tree.get_children():
                 if row_id.endswith("_main"):
                     tree.set(row_id, column="Check", value="✘")
@@ -141,24 +142,22 @@ class CraftingChecklistApp:
     def create_checklist_data(self, page_number):
         if page_number == 1:
             return [
-                {"item": "Fine Sand", "number": 25, "ingredients": "Braid, Stamina 500 Potion", "checked": False, "ingredient_checks": [False, False]},
-                {"item": "Prison Ghost Wings", "number": 15, "ingredients": "Cotton Cushion, Finest Silk", "checked": False, "ingredient_checks": [False, False]},
-                {"item": "Prison Ghost Wings", "number": 15, "ingredients": "Cotton Cushion, Finest Silk,", "checked": False, "ingredient_checks": [False, False]}
+                {"item": "Fine Sand", "number": 25, "ingredients": [["Braid", 50], ["Stamina 500 Potion", 75]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Prison Ghost Wings", "number": 15, "ingredients": [["Cotton Cushion", 20], ["Finest Silk", 10]], "checked": False, "ingredient_checks": [False, False]},
             ]
         elif page_number == 2:
             return [
-                {"item": "Mystic Stone", "number": 10, "ingredients": "Shining Crystal, Mana Dust", "checked": False, "ingredient_checks": [False, False]},
-                {"item": "Phoenix Feather", "number": 5, "ingredients": "Fire Essence, Mystic Cloth", "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Mystic Stone", "number": 10, "ingredients": [["Shining Crystal", 5], ["Mana Dust", 15]], "checked": False, "ingredient_checks": [False, False]},
             ]
         elif page_number == 3:
             return [
-                {"item": "Dragon Scale", "number": 8, "ingredients": "Ancient Ore, Magic Core", "checked": False, "ingredient_checks": [False, False]},
-                {"item": "Elven Bow", "number": 1, "ingredients": "Enchanted Wood, Silver Thread", "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Dragon Scale", "number": 8, "ingredients": [["Ancient Ore", 5], ["Magic Core", 12], ["Dragon Blood", 8]], "checked": False, "ingredient_checks": [False, False, False]},
+                {"item": "Elven Bow", "number": 1, "ingredients": [["Enchanted Wood", 3], ["Silver Thread", 2]], "checked": False, "ingredient_checks": [False, False]},
             ]
         elif page_number == 4:
             return [
-                {"item": "Healing Potion", "number": 50, "ingredients": "Herbs, Water", "checked": False, "ingredient_checks": [False, False]},
-                {"item": "Mana Potion", "number": 30, "ingredients": "Mana Herb, Essence of Magic", "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Healing Potion", "number": 50, "ingredients": [["Herbs", 30], ["Water", 20], ["Life Essence", 10]], "checked": False, "ingredient_checks": [False, False, False]},
+                {"item": "Mana Potion", "number": 30, "ingredients": [["Mana Herb", 15], ["Essence of Magic", 10]], "checked": False, "ingredient_checks": [False, False]},
             ]
         else:
             return []
@@ -179,6 +178,11 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = CraftingChecklistApp(root)
     root.mainloop()
+
+
+
+
+
 
 
 
