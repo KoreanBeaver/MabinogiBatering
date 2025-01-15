@@ -53,7 +53,7 @@
       ],
       "checked": false,
       "ingredient_checks": [
-        true,
+        false,
         false
       ]
     },
@@ -74,11 +74,11 @@
           32
         ]
       ],
-      "checked": true,
+      "checked": false,
       "ingredient_checks": [
-        true,
-        true,
-        true
+        false,
+        false,
+        false
       ]
     },
     {
@@ -101,22 +101,41 @@
       "checked": false,
       "ingredient_checks": [
         false,
-        true,
-        true
+        false,
+        false
       ]
     }
   ],
   "2": [
     {
-      "item": "Mystic Stone",
-      "number": 10,
+      "item": "Wooden Table",
+      "number": 25,
       "ingredients": [
         [
-          "Shining Crystal",
-          5
+          "Shyllien",
+          50
         ],
         [
-          "Mana Dust",
+          "Shrimp Taming Bait",
+          100
+        ]
+      ],
+      "checked": false,
+      "ingredient_checks": [
+        false,
+        false
+      ]
+    },
+    {
+      "item": "Wooden Craft",
+      "number": 15,
+      "ingredients": [
+        [
+          "Tough String",
+          30
+        ],
+        [
+          "Magic Parchment",
           15
         ]
       ],
@@ -125,23 +144,40 @@
         false,
         false
       ]
-    }
-  ],
-  "3": [
+    },
     {
-      "item": "Dragon Scale",
+      "item": "Stone Horse Statue",
+      "number": 10,
+      "ingredients": [
+        [
+          "Wheat Flour",
+          50
+        ],
+        [
+          "Hillwen Alloy",
+          20
+        ]
+      ],
+      "checked": false,
+      "ingredient_checks": [
+        false,
+        false
+      ]
+    },
+    {
+      "item": "Karu Shiitake Mushroom",
       "number": 8,
       "ingredients": [
         [
-          "Ancient Ore",
-          5
+          "Average Firewood",
+          40
         ],
         [
-          "Magic Core",
-          12
+          "Fine Silk",
+          32
         ],
         [
-          "Dragon Blood",
+          "Spin Gear",
           8
         ]
       ],
@@ -153,16 +189,42 @@
       ]
     },
     {
-      "item": "Elven Bow",
-      "number": 1,
+      "item": "Shellfish Fossil",
+      "number": 3,
       "ingredients": [
         [
-          "Enchanted Wood",
+          "Magic Quill Pen",
+          15
+        ],
+        [
+          "Sturdy Loop",
           3
         ],
         [
-          "Silver Thread",
-          2
+          "Energy Amplifier",
+          6
+        ]
+      ],
+      "checked": false,
+      "ingredient_checks": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "3": [
+    {
+      "item": "Volcanic Mud Pack",
+      "number": 25,
+      "ingredients": [
+        [
+          "Copper Plate",
+          50
+        ],
+        [
+          "Mysterious Herb Powder",
+          75
         ]
       ],
       "checked": false,
@@ -170,24 +232,60 @@
         false,
         false
       ]
-    }
-  ],
-  "4": [
+    },
     {
-      "item": "Healing Potion",
-      "number": 50,
+      "item": "Magma Stone",
+      "number": 15,
       "ingredients": [
         [
-          "Herbs",
+          "Mythril Plate",
           30
         ],
         [
-          "Water",
-          20
+          "Barley Flour",
+          45
+        ]
+      ],
+      "checked": false,
+      "ingredient_checks": [
+        false,
+        false
+      ]
+    },
+    {
+      "item": "Ixion Horn",
+      "number": 10,
+      "ingredients": [
+        [
+          "Gold Plate",
+          50
         ],
         [
-          "Life Essence",
-          10
+          "Marionette 500 Potion",
+          30
+        ]
+      ],
+      "checked": false,
+      "ingredient_checks": [
+        false,
+        false
+      ]
+    },
+    {
+      "item": "Volcano Lizard Egg",
+      "number": 8,
+      "ingredients": [
+        [
+          "Finest Fabric",
+          40
+        ],
+        [
+          "HP 500 Potion",
+          16
+        ],
+        [
+          "Glittering Paper",
+          40
         ]
       ],
       "checked": false,
@@ -198,20 +296,132 @@
       ]
     },
     {
-      "item": "Mana Potion",
-      "number": 30,
+      "item": "Raspa Black Leopard Leather",
+      "number": 3,
       "ingredients": [
         [
-          "Mana Herb",
-          15
+          "Mutant",
+          3
         ],
         [
-          "Essence of Magic",
-          10
+          "Special Firewood",
+          9
+        ],
+        [
+          "Harmonious Cosmos Perfume",
+          6
         ]
       ],
       "checked": false,
       "ingredient_checks": [
+        false,
+        false,
+        false
+      ]
+    }
+  ],
+  "4": [
+    {
+      "item": "Elvan Egg",
+      "number": 25,
+      "ingredients": [
+        [
+          "Fine Firewood",
+          50
+        ],
+        [
+          "Mp 500 Potion",
+          25
+        ]
+      ],
+      "checked": false,
+      "ingredient_checks": [
+        false,
+        false
+      ]
+    },
+    {
+      "item": "Calida Salmon",
+      "number": 15,
+      "ingredients": [
+        [
+          "Purified Rabiit Foot",
+          15
+        ],
+        [
+          "Energy Converter",
+          15
+        ]
+      ],
+      "checked": false,
+      "ingredient_checks": [
+        false,
+        false
+      ]
+    },
+    {
+      "item": "Hot Spring Bath Bomb",
+      "number": 10,
+      "ingredients": [
+        [
+          "Sundew",
+          30
+        ],
+        [
+          "Finest Vanilla Scented Candle",
+          20
+        ]
+      ],
+      "checked": false,
+      "ingredient_checks": [
+        false,
+        false
+      ]
+    },
+    {
+      "item": "Large Camping Tent",
+      "number": 8,
+      "ingredients": [
+        [
+          "Artificial Turf",
+          8
+        ],
+        [
+          "Emerald Fuse",
+          8
+        ],
+        [
+          "Fine Leather Strap",
+          40
+        ]
+      ],
+      "checked": false,
+      "ingredient_checks": [
+        false,
+        false,
+        false
+      ]
+    },
+    {
+      "item": "Pink Salt",
+      "number": 3,
+      "ingredients": [
+        [
+          "Large Mythril Nail",
+          9
+        ],
+        [
+          "Poison Tip Wyvern Balista Bolt",
+          9
+        ],
+        [
+          "Finest Firewood",
+          9
+        ]
+      ],
+      "checked": false,
+      "ingredient_checks": [
+        false,
         false,
         false
       ]
