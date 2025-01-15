@@ -151,17 +151,27 @@ class CraftingChecklistApp:
             ]
         elif page_number == "2":
             return [
-                {"item": "Mystic Stone", "number": 10, "ingredients": [["Shining Crystal", 5], ["Mana Dust", 15]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Wooden Table", "number": 25, "ingredients": [["Shyllien", 50], ["Shrimp Taming Bait", 100]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Wooden Craft", "number": 15, "ingredients": [["Tough String", 30], ["Magic Parchment", 15]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Stone Horse Statue", "number": 10, "ingredients": [["Wheat Flour", 50], ["Hillwen Alloy", 20]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Karu Shiitake Mushroom", "number": 8, "ingredients": [["Average Firewood", 40], ["Fine Silk", 32], ["Spin Gear", 8]], "checked": False, "ingredient_checks": [False, False, False]},
+                {"item": "Shellfish Fossil", "number": 3, "ingredients": [["Magic Quill Pen", 15], ["Sturdy Loop", 3], ["Energy Amplifier", 6]], "checked": False, "ingredient_checks": [False, False, False]}
             ]
         elif page_number == "3":
             return [
-                {"item": "Dragon Scale", "number": 8, "ingredients": [["Ancient Ore", 5], ["Magic Core", 12], ["Dragon Blood", 8]], "checked": False, "ingredient_checks": [False, False, False]},
-                {"item": "Elven Bow", "number": 1, "ingredients": [["Enchanted Wood", 3], ["Silver Thread", 2]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Volcanic Mud Pack", "number": 25, "ingredients": [["Copper Plate", 50], ["Mysterious Herb Powder", 75]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Magma Stone", "number": 15, "ingredients": [["Mythril Plate", 30], ["Barley Flour", 45]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Ixion Horn", "number": 10, "ingredients": [["Gold Plate", 50], ["Marionette 500 Potion", 30]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Volcano Lizard Egg", "number": 8, "ingredients": [["Finest Fabric", 40], ["HP 500 Potion", 16], ["Glittering Paper", 40]], "checked": False, "ingredient_checks": [False, False, False]},
+                {"item": "Raspa Black Leopard Leather", "number": 3, "ingredients": [["Mutant", 3], ["Special Firewood", 9], ["Harmonious Cosmos Perfume", 6]], "checked": False, "ingredient_checks": [False, False, False]}
             ]
         elif page_number == "4":
             return [
-                {"item": "Healing Potion", "number": 50, "ingredients": [["Herbs", 30], ["Water", 20], ["Life Essence", 10]], "checked": False, "ingredient_checks": [False, False, False]},
-                {"item": "Mana Potion", "number": 30, "ingredients": [["Mana Herb", 15], ["Essence of Magic", 10]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Elvan Egg", "number": 25, "ingredients": [["Fine Firewood", 50], ["Mp 500 Potion", 25]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Calida Salmon", "number": 15, "ingredients": [["Purified Rabiit Foot", 15], ["Energy Converter", 15]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Hot Spring Bath Bomb", "number": 10, "ingredients": [["Sundew", 30], ["Finest Vanilla Scented Candle", 20]], "checked": False, "ingredient_checks": [False, False]},
+                {"item": "Large Camping Tent", "number": 8, "ingredients": [["Artificial Turf", 8], ["Emerald Fuse", 8], ["Fine Leather Strap", 40]], "checked": False, "ingredient_checks": [False, False, False]},
+                {"item": "Pink Salt", "number": 3, "ingredients": [["Large Mythril Nail", 9], ["Poison Tip Wyvern Balista Bolt", 9], ["Finest Firewood", 9]], "checked": False, "ingredient_checks": [False, False, False]}
             ]
         else:
             return []
@@ -180,8 +190,11 @@ class CraftingChecklistApp:
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root.geometry("800x600")
     app = CraftingChecklistApp(root)
     root.mainloop()
+
+
 
 
 
