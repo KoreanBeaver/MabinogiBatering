@@ -4,32 +4,31 @@ import json
 import os
 import webbrowser
 
-
 class CraftingChecklistApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Crafting Checklist")
         self.trees = {}
         self.items = {}
-        self.file_path = os.path.join(os.getcwd(), "checklist_data.json")  # 절대 경로로 설정
+        self.file_path = os.path.abspath("./checklist_data.json")  # 절대 경로로 설정
         self.load_data()  # 데이터 로드
-        
+
         self.notebook = ttk.Notebook(root)
         self.notebook.pack(fill="both", expand=True)
 
-        #TODO: frame load check
-        self.load_data()
-        # 각 탭 생성
-        # for i in range(1, 5):
-        #     frame = ttk.Frame(self.notebook)
-        #     self.notebook.add(frame, text=f"Page {i}")
-        #     self.add_checkboxes(frame, i)
+        # 각 탭 생성 (탭 이름 수정)
+        tab_names = ["Oasis", "Karu Forest", "Pera", "Calida"]  # 탭 이름 리스트
+        for i, name in enumerate(tab_names, start=1):
+            frame = ttk.Frame(self.notebook)
+            self.notebook.add(frame, text=name)  # 탭 이름 설정
+            self.add_checkboxes(frame, i)
 
         reset_button = ttk.Button(root, text="Reset All", command=self.reset_all)
         reset_button.pack(pady=10)
 
     def add_checkboxes(self, frame, page_number):
-        if page_number not in self.items:
+        page_number = str(page_number)
+        if page_number not in self.items.keys():
             self.items[page_number] = self.create_checklist_data(page_number)
 
         # Treeview 생성
@@ -69,8 +68,8 @@ class CraftingChecklistApp:
                     tags=("sub_item",)
                 )
 
-        tree.bind("<Button-1>", lambda event, tree=tree, page_number=page_number: self.on_click(event, tree, page_number))
-        self.trees[page_number] = tree
+        tree.bind("<Button-1>", lambda event, tree=tree, page_number=page_number: self.on_click(event, tree, str(page_number)))
+        self.trees[str(page_number)] = tree
 
     def on_click(self, event, tree, page_number):
         region = tree.identify_region(event.x, event.y)
@@ -79,15 +78,16 @@ class CraftingChecklistApp:
 
         if region == "cell" and column == "#5":  # Check 열 클릭
             if "_main" in row_id:  # 상위 항목 클릭
-                self.toggle_check(tree, row_id, page_number)
+                self.toggle_check(tree, row_id, str(page_number))
             elif "_sub_" in row_id:  # 하위 항목 클릭
-                self.toggle_sub_check(tree, row_id, page_number)
+                self.toggle_sub_check(tree, row_id, str(page_number))
 
         elif region == "cell" and column == "#3":  # Ingredient 열 클릭
             if "_sub_" in row_id:
-                self.open_link(tree, row_id, page_number)
+                self.open_link(tree, row_id, str(page_number))
 
     def toggle_check(self, tree, row_id, page_number):
+        page_number = str(page_number)
         idx = int(row_id.split("_")[0])
         current_status = self.items[page_number][idx]["checked"]
         new_status = not current_status
@@ -110,7 +110,7 @@ class CraftingChecklistApp:
         current_status = self.items[page_number][main_idx]["ingredient_checks"][sub_idx]
         new_status = not current_status
         self.items[page_number][main_idx]["ingredient_checks"][sub_idx] = new_status
-
+        
         # 하위 항목 체크 상태 변경
         check_symbol = "✔" if new_status else "✘"
         tree.set(row_id, column="Check", value=check_symbol)
@@ -132,33 +132,16 @@ class CraftingChecklistApp:
     def reset_all(self):
         for page_number, tree in self.trees.items():
             for idx in self.items[page_number]:
-                # 상위 항목 체크 상태 리셋
                 idx["checked"] = False
-                # 하위 항목 체크 상태 리셋
                 idx["ingredient_checks"] = [False] * len(idx["ingredients"])
 
-                # 상위 항목 체크 표시 리셋
-                for row_id in tree.get_children():
-                    if row_id.endswith("_main"):  # 상위 항목
-                        tree.set(row_id, column="Check", value="✘")
-
-                    elif "_sub_" in row_id:  # 하위 항목
-                        # 하위 항목도 체크 리셋
-                        tree.set(row_id, column="Check", value="✘")
-                        
-            # 추가로 각 하위 항목의 체크 상태도 명확히 반영
-            for idx, item in enumerate(self.items[page_number]):
-                main_row_id = f"{idx}_main"
-                # 하위 항목들 업데이트
-                for ingredient_idx, ingredient_check in enumerate(item["ingredient_checks"]):
-                    sub_row_id = f"{idx}_sub_{ingredient_idx}"
-                    check_symbol = "✔" if ingredient_check else "✘"
-                    tree.set(sub_row_id, column="Check", value=check_symbol)
-
+            for row_id in tree.get_children():
+                tree.set(row_id, column="Check", value="✘")
         self.save_data()
 
     def create_checklist_data(self, page_number):
-        if page_number == 1:
+        page_number = str(page_number)
+        if page_number == "1":
             return [
                 {"item": "Fine Sand", "number": 25, "ingredients": [["Braid", 50], ["Stamina 500 Potion", 75]], "checked": False, "ingredient_checks": [False, False]},
                 {"item": "Prison Ghost Wings", "number": 15, "ingredients": [["Cotton Cushion Stuffing", 20], ["Finest Silk", 10]], "checked": False, "ingredient_checks": [False, False]},
@@ -166,16 +149,16 @@ class CraftingChecklistApp:
                 {"item": "Cactus Flower", "number": 8, "ingredients": [["Spirit Liqueur", 8], ["Silver Plate", 16], ["Fine Fabric", 32]], "checked": False, "ingredient_checks": [False, False, False]},
                 {"item": "Giant Canine Fossil", "number": 3, "ingredients": [["Pet Playset", 3], ["Hay Bale", 9], ["Enchanted Firewood", 15]], "checked": False, "ingredient_checks": [False, False, False]}
             ]
-        elif page_number == 2:
+        elif page_number == "2":
             return [
                 {"item": "Mystic Stone", "number": 10, "ingredients": [["Shining Crystal", 5], ["Mana Dust", 15]], "checked": False, "ingredient_checks": [False, False]},
             ]
-        elif page_number == 3:
+        elif page_number == "3":
             return [
                 {"item": "Dragon Scale", "number": 8, "ingredients": [["Ancient Ore", 5], ["Magic Core", 12], ["Dragon Blood", 8]], "checked": False, "ingredient_checks": [False, False, False]},
                 {"item": "Elven Bow", "number": 1, "ingredients": [["Enchanted Wood", 3], ["Silver Thread", 2]], "checked": False, "ingredient_checks": [False, False]},
             ]
-        elif page_number == 4:
+        elif page_number == "4":
             return [
                 {"item": "Healing Potion", "number": 50, "ingredients": [["Herbs", 30], ["Water", 20], ["Life Essence", 10]], "checked": False, "ingredient_checks": [False, False, False]},
                 {"item": "Mana Potion", "number": 30, "ingredients": [["Mana Herb", 15], ["Essence of Magic", 10]], "checked": False, "ingredient_checks": [False, False]},
@@ -184,24 +167,22 @@ class CraftingChecklistApp:
             return []
 
     def load_data(self):
-        # 파일이 존재하지 않으면 초기 데이터로 파일을 생성하고 저장
         if os.path.exists(self.file_path):
             with open(self.file_path, "r") as file:
                 self.items = json.load(file)
         else:
-            print("file not found")
-            self.items = {1: self.create_checklist_data(1), 2: self.create_checklist_data(2), 3: self.create_checklist_data(3), 4: self.create_checklist_data(4)}
-            self.save_data()  # 초기 데이터를 파일에 저장
+            self.items = {str(page): self.create_checklist_data(page) for page in range(1, 5)}
+            self.save_data()
 
     def save_data(self):
         with open(self.file_path, "w") as file:
-            json.dump(self.items, file, indent=4)
-
+            json.dump(self.items, file, indent=2)
 
 if __name__ == "__main__":
     root = tk.Tk()
     app = CraftingChecklistApp(root)
     root.mainloop()
+
 
 
 
