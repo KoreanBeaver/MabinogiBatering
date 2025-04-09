@@ -13,10 +13,10 @@
           75
         ]
       ],
-      "checked": false,
+      "checked": true,
       "ingredient_checks": [
-        false,
-        false
+        true,
+        true
       ]
     },
     {
@@ -35,7 +35,7 @@
       "checked": false,
       "ingredient_checks": [
         false,
-        false
+        true
       ]
     },
     {
@@ -76,9 +76,9 @@
       ],
       "checked": false,
       "ingredient_checks": [
+        true,
         false,
-        false,
-        false
+        true
       ]
     },
     {
